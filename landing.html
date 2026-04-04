@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacio Mimar T | Estética Avanzada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --verde-principal: #8ca38a; 
+            --verde-oscuro: #7a8f78; 
+            --texto-suave: #6b706a; 
+        }
+        body { 
+            margin: 0; 
+            font-family: 'Montserrat', sans-serif; 
+            background: url("img/recepcion.jpeg") center/cover no-repeat fixed; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        body::before { 
+            content: ""; 
+            position: absolute; 
+            inset: 0; 
+            background: rgba(255, 255, 255, 0.4); /* Fondo más claro para leer mejor */
+            backdrop-filter: blur(4px); 
+            z-index: 0;
+        }
+
+        /* --- NUEVA SECCIÓN HERO (LANDING) --- */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 80px 20px;
+            color: #3e5140;
+            max-width: 800px;
+        }
+        .hero h1 { font-weight: 300; font-size: 42px; letter-spacing: 5px; margin-bottom: 10px; }
+        .hero p { font-size: 16px; color: var(--texto-suave); margin-bottom: 30px; line-height: 1.8; }
+
+        .container { 
+            position: relative; 
+            background: rgba(255,255,255,0.92); 
+            backdrop-filter: blur(12px); 
+            padding: 40px; 
+            border-radius: 28px; 
+            text-align: center; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1); 
+            max-width: 420px; 
+            width: 90%; 
+            border: 1px solid rgba(255,255,255,0.4); 
+            z-index: 1; 
+            margin-bottom: 50px;
+        }
+
+        /* Tus estilos originales se mantienen */
+        .logo { width: 220px; margin-bottom: 15px; }
+        .subtitulo { color: var(--verde-principal); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; font-weight: 600; }
+        .profesional-card { background: rgba(232,237,232,0.7); padding: 20px; border-radius: 16px; margin-bottom: 25px; }
+        .profesional { font-weight: 600; font-size: 18px; color: #3e5140; }
+        .titulo-profesional { font-size: 12px; color: var(--texto-suave); margin-bottom: 5px; }
+        .descripcion { font-size: 13px; color: #7a7a7a; line-height: 1.5; font-style: italic; }
+        
+        input { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #e0e0e0; font-size: 15px; margin-bottom: 12px; box-sizing: border-box; }
+        button { background: var(--verde-principal); border: none; color: white; padding: 18px; width: 100%; border-radius: 12px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all .3s ease; }
+        button:hover { background: var(--verde-oscuro); transform: translateY(-2px); }
+        
+        .footer { position: relative; z-index: 1; padding: 20px; font-size: 11px; color: #666; text-align: center; }
+        .error { color: #d9534f; font-size: 13px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>ESPACIO MIMAR T</h1>
+        <p>Ciencia y estética se unen para cuidar tu piel. <br> Agenda tu consulta personalizada con Gimena Knack.</p>
+    </header>
+
+    <div class="container" id="login-section">
+        <img src="img/logo.png" class="logo" alt="Logo">
+        <div class="subtitulo">Estética Avanzada</div>
+        
+        <div class="profesional-card">
+            <div class="profesional">Gimena Knack</div>
+            <div class="titulo-profesional">Farmacéutica · Dermatocosmiatra</div>
+            <div class="descripcion">"Tratamientos dermoestéticos con respaldo farmacéutico en Andresito."</div>
+        </div>
+
+        <h2 style="font-size: 18px; font-weight: 400; margin-bottom: 20px;">Ingreso de Pacientes</h2>
+        <input id="nombre" placeholder="Nombre + inicial apellido">
+        <input id="dni" type="number" placeholder="DNI (sin puntos)">
+        <button id="btnIngresar">Acceder a la Agenda</button>
+        <div id="error" class="error"></div>
+    </div>
+
+    <div class="footer">© 2026 Espacio Mimar T — Diseño y Desarrollo por Braulio</div>
+
+    <script type="module">
+        // Tu lógica de Firebase se mantiene igual aquí...
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBc5435tsDnJ_yJqO1ppwSjxSpCIhpjgew",
+            authDomain: "estetica-8d067.firebaseapp.com",
+            projectId: "estetica-8d067",
+            storageBucket: "estetica-8d067.firebasestorage.app",
+            messagingSenderId: "501220214938",
+            appId: "1:501220214938:web:af6e262c23d9a7ea853723"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById("btnIngresar").addEventListener("click", async () => {
+            const nombreIngresado = document.getElementById("nombre").value.trim().toLowerCase();
+            const dniIngresado = document.getElementById("dni").value.trim();
+            const errorDiv = document.getElementById("error");
+
+            if(!nombreIngresado || !dniIngresado) {
+                errorDiv.innerText = "Completa los datos para continuar.";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "clients", dniIngresado);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const cliente = docSnap.data();
+                    if (cliente.fullName.toLowerCase() === nombreIngresado) {
+                        localStorage.setItem("clienteDNI", dniIngresado);
+                        // Redirección según tu embudo lógico
+                        window.location.href = "servicios.html"; 
+                    } else {
+                        errorDiv.innerText = "Los datos no coinciden.";
+                        errorDiv.style.display = "block";
+                    }
+                } else {
+                    errorDiv.innerText = "Paciente no registrado.";
+                    errorDiv.style.display = "block";
+                }
+            } catch (e) {
+                errorDiv.innerText = "Error de conexión.";
+                errorDiv.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>
