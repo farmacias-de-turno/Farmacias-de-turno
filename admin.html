@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -247,7 +248,10 @@
     appId: "1:199608196099:web:dc2fd3366fa6e62fc80236"
   };
   if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  const db   = firebase.firestore();
+  const auth = firebase.auth();
+  // Autenticación anónima requerida por las reglas de Firestore
+  auth.signInAnonymously().catch(() => {});
 
   // ── Contraseña (cambiar cuando quieras) ──
   const PASS = "rmk2026";
