@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Farmacias de Turno</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      background: linear-gradient(160deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    #login-screen img { height: 44px; margin-bottom: 20px; opacity: 0.9; }
+    #login-screen h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+    #login-screen p  { font-size: 0.8rem; color: #94a3b8; margin-bottom: 24px; }
+
+    .login-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: #72bd99; }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: #4b9f81;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: #3f8a6f; }
+
+    #login-error {
+      color: #f87171;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; width: 100%; max-width: 860px; }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .dash-header-left { display: flex; align-items: center; gap: 12px; }
+    .dash-header-left img { height: 36px; opacity: 0.9; }
+    .dash-header-left div h1 { font-size: 1.3rem; font-weight: 800; }
+    .dash-header-left div p { font-size: 0.75rem; color: #64748b; }
+
+    .btn-logout {
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.1); color: #f1f5f9; }
+
+    /* KPIs */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .kpi-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .kpi-value { font-size: 2rem; font-weight: 800; color: #72bd99; }
+    .kpi-sub   { font-size: 0.72rem; color: #475569; margin-top: 2px; }
+
+    /* Gráfico */
+    .chart-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .chart-card h2 { font-size: 0.85rem; font-weight: 600; color: #94a3b8; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Tabla */
+    .table-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 22px;
+      overflow-x: auto;
+    }
+
+    .table-card h2 { font-size: 0.85rem; font-weight: 600; color: #94a3b8; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { text-align: left; padding: 8px 12px; color: #475569; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge-hoy {
+      background: rgba(114,189,153,0.18);
+      color: #72bd99;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 40px;
+      color: #475569;
+      font-size: 0.85rem;
+    }
+
+    .refresh-info {
+      font-size: 0.7rem;
+      color: #334155;
+      text-align: right;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <img src="img/redfarmako.png" alt="Red Farmako">
+  <h2>Panel de Administración</h2>
+  <p>Farmacias de Turno · Comandante Andresito</p>
+  <input id="pwd-input" class="login-input" type="password" placeholder="Contraseña" autocomplete="current-password">
+  <button class="login-btn" onclick="intentarLogin()">Ingresar</button>
+  <div id="login-error">Contraseña incorrecta</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <img src="img/redfarmako.png" alt="Red Farmako">
+      <div>
+        <h1>Panel de Tráfico</h1>
+        <p>Visitas al QR · Farmacias de Turno</p>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="kpi-label">Hoy</div>
+      <div class="kpi-value" id="kpi-hoy">—</div>
+      <div class="kpi-sub">visitas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ayer</div>
+      <div class="kpi-value" id="kpi-ayer">—</div>
+      <div class="kpi-sub">visitas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Este mes</div>
+      <div class="kpi-value" id="kpi-mes">—</div>
+      <div class="kpi-sub">visitas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total</div>
+      <div class="kpi-value" id="kpi-total">—</div>
+      <div class="kpi-sub">visitas registradas</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h2>Visitas por día (últimos 30 días)</h2>
+    <canvas id="chart-visitas" height="90"></canvas>
+  </div>
+
+  <div class="table-card">
+    <h2>Detalle por día</h2>
+    <div id="tabla-container"><div class="loader">Cargando datos…</div></div>
+    <div class="refresh-info" id="refresh-info"></div>
+  </div>
+</div>
+
+<script>
+  // ── Config Firebase ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyBO_gf6FCTTce_-wfdI8bfVxIhTd2E4EAQ",
+    authDomain: "farmacias-de-turno-75b56.firebaseapp.com",
+    projectId: "farmacias-de-turno-75b56",
+    storageBucket: "farmacias-de-turno-75b56.firebasestorage.app",
+    messagingSenderId: "199608196099",
+    appId: "1:199608196099:web:dc2fd3366fa6e62fc80236"
+  };
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ── Contraseña (cambiar cuando quieras) ──
+  const PASS = "rmk2026";
+
+  // ── Fecha Argentina ──
+  function fechaArgentina(offsetDias = 0) {
+    const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
+    d.setDate(d.getDate() + offsetDias);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function formatearFecha(iso) {
+    const [y, m, d] = iso.split('-');
+    const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const fecha = new Date(y, m-1, d);
+    return `${dias[fecha.getDay()]} ${d} ${meses[m-1]} ${y}`;
+  }
+
+  // ── Login ──
+  function intentarLogin() {
+    const val = document.getElementById('pwd-input').value;
+    if (val === PASS) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      cargarDatos();
+      setInterval(cargarDatos, 60000);
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('pwd-input').value = '';
+    }
+  }
+
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') intentarLogin();
+  });
+
+  function cerrarSesion() {
+    location.reload();
+  }
+
+  // ── Chart ──
+  let chart = null;
+
+  function actualizarChart(labels, data) {
+    const ctx = document.getElementById('chart-visitas').getContext('2d');
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Visitas',
+          data,
+          backgroundColor: data.map((_, i) => i === data.length - 1 ? 'rgba(114,189,153,0.85)' : 'rgba(114,189,153,0.35)'),
+          borderColor: 'rgba(114,189,153,0.9)',
+          borderWidth: 1.5,
+          borderRadius: 5,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: items => formatearFecha(items[0].label),
+              label: item => ` ${item.raw} visita${item.raw !== 1 ? 's' : ''}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#475569', font: { size: 10 }, maxRotation: 45 },
+            grid:  { color: 'rgba(255,255,255,0.03)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#475569', precision: 0 },
+            grid:  { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Cargar datos ──
+  async function cargarDatos() {
+    const hoy  = fechaArgentina(0);
+    const ayer = fechaArgentina(-1);
+
+    // Últimos 30 días
+    const fechas = [];
+    for (let i = 29; i >= 0; i--) fechas.push(fechaArgentina(-i));
+
+    try {
+      const snap = await db.collection('visitas').orderBy('fecha', 'desc').limit(90).get();
+      const mapa = {};
+      snap.forEach(doc => { mapa[doc.id] = doc.data().total || 0; });
+
+      // KPIs
+      document.getElementById('kpi-hoy').textContent   = mapa[hoy]  || 0;
+      document.getElementById('kpi-ayer').textContent  = mapa[ayer] || 0;
+
+      const mesActual = hoy.slice(0, 7);
+      let totalMes = 0, totalGlobal = 0;
+      Object.entries(mapa).forEach(([fecha, v]) => {
+        totalGlobal += v;
+        if (fecha.startsWith(mesActual)) totalMes += v;
+      });
+      document.getElementById('kpi-mes').textContent   = totalMes;
+      document.getElementById('kpi-total').textContent = totalGlobal;
+
+      // Chart (últimos 30 días)
+      const labels = fechas.map(f => f.slice(5));   // MM-DD
+      const data   = fechas.map(f => mapa[f] || 0);
+      actualizarChart(labels, data);
+
+      // Tabla (todos los días con datos ordenados desc)
+      const filas = Object.entries(mapa)
+        .sort((a, b) => b[0].localeCompare(a[0]));
+
+      const html = `
+        <table>
+          <thead><tr><th>Fecha</th><th>Visitas</th></tr></thead>
+          <tbody>
+            ${filas.map(([f, v]) => `
+              <tr>
+                <td>${formatearFecha(f)}${f === hoy ? '<span class="badge-hoy">hoy</span>' : ''}</td>
+                <td><strong>${v}</strong></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+      document.getElementById('tabla-container').innerHTML = html;
+
+      const ahora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('refresh-info').textContent = `Última actualización: ${ahora} · Refresca automáticamente cada 60 s`;
+
+    } catch (e) {
+      document.getElementById('tabla-container').innerHTML =
+        '<div class="loader">Error al cargar datos. Verificá las reglas de Firestore.</div>';
+    }
+  }
+</script>
+
+</body>
+</html>
