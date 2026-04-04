@@ -348,6 +348,8 @@
     for (let i = 29; i >= 0; i--) fechas.push(fechaArgentina(-i));
 
     try {
+      // Garantizar auth antes de leer
+      if (!auth.currentUser) await auth.signInAnonymously();
       const snap = await db.collection('visitas').orderBy('fecha', 'desc').limit(90).get();
       const mapa = {};
       snap.forEach(doc => { mapa[doc.id] = doc.data().total || 0; });

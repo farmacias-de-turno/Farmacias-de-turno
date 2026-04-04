@@ -472,7 +472,6 @@
 
 <!-- Firebase tracking -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script>
   (function() {
@@ -485,16 +484,13 @@
       appId: "1:199608196099:web:dc2fd3366fa6e62fc80236"
     };
     if (!firebase.apps.length) firebase.initializeApp(cfg);
-    const db   = firebase.firestore();
-    const auth = firebase.auth();
+    const db = firebase.firestore();
     const ahora = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
     const hoy = `${ahora.getFullYear()}-${String(ahora.getMonth()+1).padStart(2,'0')}-${String(ahora.getDate()).padStart(2,'0')}`;
-    auth.signInAnonymously()
-      .then(() => db.collection('visitas').doc(hoy).set(
-        { total: firebase.firestore.FieldValue.increment(1), fecha: hoy },
-        { merge: true }
-      ))
-      .catch(() => {});
+    db.collection('visitas').doc(hoy).set(
+      { total: firebase.firestore.FieldValue.increment(1), fecha: hoy },
+      { merge: true }
+    ).catch(() => {});
   })();
 </script>
 
