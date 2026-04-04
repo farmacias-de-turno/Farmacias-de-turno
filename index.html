@@ -76,21 +76,22 @@
 
         .emoji-floating {
             position: absolute;
-            font-size: 1.45rem;
-            opacity: 0.12;
             user-select: none;
             transform-origin: center;
             animation: float-drift linear infinite, rotate-drift linear infinite;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
         }
 
         @keyframes float-drift {
-            0% { transform: translateY(0) translateX(0) scale(1); }
-            50% { transform: translateY(-8vh) translateX(4vw) scale(1.1); }
-            100% { transform: translateY(0) translateX(-4vw) scale(1); }
+            0%   { transform: translateY(0)    translateX(0)    scale(1);   }
+            25%  { transform: translateY(-12vh) translateX(6vw)  scale(1.12); }
+            50%  { transform: translateY(-6vh)  translateX(-5vw) scale(0.95); }
+            75%  { transform: translateY(-16vh) translateX(3vw)  scale(1.08); }
+            100% { transform: translateY(0)    translateX(0)    scale(1);   }
         }
 
         @keyframes rotate-drift {
-            0% { rotate: 0deg; }
+            0%   { rotate: 0deg; }
             100% { rotate: 360deg; }
         }
             position: fixed;
@@ -499,24 +500,28 @@
 
 <script src="script.js"></script>
 <script>
-    const emojis = ['⏰','💊','🏥','⏱️','🧾','💉','🩺','💊'];
+    const emojis = ['⏰','💊','🏥','⏱️','🧾','💉','🩺','💊','🌡️','🔬','🩹','❤️‍🩹','🫀','🧬','🩻','⚕️'];
     const layer = document.getElementById('emoji-layer');
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 55; i++) {
         const emojiDiv = document.createElement('div');
         emojiDiv.className = 'emoji-floating';
         emojiDiv.innerText = emojis[Math.floor(Math.random()*emojis.length)];
 
-        const size = 1 + Math.random() * 0.8;
-        emojiDiv.style.fontSize = `${18 * size}px`;
-        emojiDiv.style.top = `${Math.random() * 100}%`;
+        // Mezcla de tamaños: algunos grandes destacados, mayoría medianos
+        const grande = Math.random() < 0.2;
+        const size = grande ? (2.2 + Math.random() * 1.2) : (0.9 + Math.random() * 1.1);
+        emojiDiv.style.fontSize = `${size}rem`;
+        emojiDiv.style.top  = `${Math.random() * 100}%`;
         emojiDiv.style.left = `${Math.random() * 100}%`;
 
-        const duration = 8 + Math.random() * 8;
+        const duration = 7 + Math.random() * 10;
         const delay = Math.random() * -duration;
-        emojiDiv.style.animationDuration = `${duration}s, ${12 + Math.random() * 6}s`;
+        emojiDiv.style.animationDuration = `${duration}s, ${10 + Math.random() * 8}s`;
         emojiDiv.style.animationDelay = `${delay}s, ${delay}s`;
-        emojiDiv.style.opacity = (0.06 + Math.random() * 0.12).toString();
+        // Opacidad variada: algunos más visibles que otros
+        const opacidad = grande ? (0.18 + Math.random() * 0.18) : (0.10 + Math.random() * 0.14);
+        emojiDiv.style.opacity = opacidad.toString();
 
         layer.appendChild(emojiDiv);
     }
