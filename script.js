@@ -3,6 +3,12 @@ const fechaElemento = document.getElementById("fecha");
 const btnMaps = document.getElementById("btn-maps");
 const btnWpp = document.getElementById("btn-wpp");
 const logoRed = document.querySelector(".logo-red");
+const cardElemento = document.getElementById("turno-card");
+
+const TURNO_TIMEZONE = "America/Argentina/Buenos_Aires";
+const CLASES_AJUSTE_TARJETA = ["layout-compact", "layout-tight"];
+
+let ajusteTarjetaPendiente = false;
 
 /* ===============================
    BASE DE DATOS ABRIL 2026
@@ -44,18 +50,119 @@ const turnos = {
    LOGICA DE TURNO (REGLA 08:00 AM)
    ================================= */
 
+function obtenerAhoraArgentina() {
+    const partes = new Intl.DateTimeFormat("en-CA", {
+        timeZone: TURNO_TIMEZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23"
+    }).formatToParts(new Date()).reduce((acumulado, parte) => {
+        if (parte.type !== "literal") {
+            acumulado[parte.type] = parte.value;
+        }
+
+        return acumulado;
+    }, {});
+
+    return new Date(
+        Number(partes.year),
+        Number(partes.month) - 1,
+        Number(partes.day),
+        Number(partes.hour),
+        Number(partes.minute),
+        Number(partes.second)
+    );
+}
+
+function construirFechaISO(fecha) {
+    const año = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dia = String(fecha.getDate()).padStart(2, "0");
+    return `${año}-${mes}-${dia}`;
+}
+
+function desactivarAcciones() {
+    btnMaps.onclick = null;
+    btnWpp.onclick = null;
+    btnMaps.disabled = true;
+    btnWpp.disabled = true;
+}
+
+function activarAcciones(info) {
+    btnMaps.disabled = false;
+    btnWpp.disabled = false;
+    btnMaps.onclick = () => window.open(info.maps, "_blank");
+    btnWpp.onclick = () => window.open(info.whatsapp, "_blank");
+}
+
+function reiniciarAjusteTarjeta() {
+    if (!cardElemento) {
+        return;
+    }
+
+    cardElemento.classList.remove(...CLASES_AJUSTE_TARJETA);
+    cardElemento.scrollTop = 0;
+}
+
+function tarjetaDesbordada() {
+    if (!cardElemento || !farmaciaElemento) {
+        return false;
+    }
+
+    const cardRect = cardElemento.getBoundingClientRect();
+    const nombreRect = farmaciaElemento.getBoundingClientRect();
+    const margenVisible = 16;
+    const nombreFueraDeVista = nombreRect.bottom > cardRect.bottom - margenVisible;
+
+    return cardElemento.scrollHeight > cardElemento.clientHeight + 2 || nombreFueraDeVista;
+}
+
+function asegurarContenidoVisible() {
+    if (!cardElemento) {
+        return;
+    }
+
+    reiniciarAjusteTarjeta();
+
+    if (!tarjetaDesbordada()) {
+        return;
+    }
+
+    cardElemento.classList.add("layout-compact");
+    cardElemento.scrollTop = 0;
+
+    if (!tarjetaDesbordada()) {
+        return;
+    }
+
+    cardElemento.classList.add("layout-tight");
+    cardElemento.scrollTop = 0;
+}
+
+function programarAjusteTarjeta() {
+    if (!cardElemento || ajusteTarjetaPendiente) {
+        return;
+    }
+
+    ajusteTarjetaPendiente = true;
+
+    requestAnimationFrame(() => {
+        ajusteTarjetaPendiente = false;
+        asegurarContenidoVisible();
+    });
+}
+
 function actualizarTurno() {
-    const ahora = new Date();
+    const ahora = obtenerAhoraArgentina();
     
     // RESTAMOS 8 HORAS para manejar el turno correctamente.
     // Si son las 07:00 AM, el sistema "pensará" que son las 23:00 del día anterior.
     const fechaConAjuste = new Date(ahora.getTime() - (8 * 60 * 60 * 1000));
-    
-    // Formato YYYY-MM-DD para buscar en el objeto 'turnos'
-    const año = fechaConAjuste.getFullYear();
-    const mes = String(fechaConAjuste.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaConAjuste.getDate()).padStart(2, '0');
-    const fechaISO = `${año}-${mes}-${dia}`;
+    const fechaISO = construirFechaISO(fechaConAjuste);
 
     // Mostrar fecha actual en la UI (No la ajustada, la real para el usuario)
     const opciones = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
@@ -82,12 +189,14 @@ function actualizarTurno() {
         }
 
         farmaciaElemento.textContent = nombreMostrar;
-        btnMaps.onclick = () => window.open(info.maps, "_blank");
-        btnWpp.onclick = () => window.open(info.whatsapp, "_blank");
+        activarAcciones(info);
     } else {
         farmaciaElemento.textContent = "Sin turno cargado";
         logoRed.style.display = "none";
+        desactivarAcciones();
     }
+
+    programarAjusteTarjeta();
 }
 
 // Ejecutar al cargar
@@ -95,6 +204,9 @@ actualizarTurno();
 
 // Opcional: Revisar cada 1 minuto por si alguien tiene la web abierta a las 08:00 AM
 setInterval(actualizarTurno, 60000);
+
+window.addEventListener("resize", programarAjusteTarjeta);
+window.addEventListener("orientationchange", programarAjusteTarjeta);
 
 /* ===============================
    CONFETTI

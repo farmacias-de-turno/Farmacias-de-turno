@@ -52,7 +52,7 @@
             height: auto;
             max-height: 90vh;
             border-radius: var(--radius-lg);
-            padding: 18px 14px;
+            padding: 18px 14px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -64,6 +64,128 @@
             overflow-y: auto;
             color: #f8fafc;
             z-index: 2;
+        }
+
+        .card::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        .card.layout-compact {
+            padding: 20px 18px;
+        }
+
+        .card.layout-tight {
+            padding: 16px 14px 18px;
+        }
+
+        .card.layout-compact .logo-municipio,
+        .card.layout-tight .logo-municipio {
+            height: 74px;
+            margin-bottom: 8px;
+        }
+
+        .card.layout-tight .logo-municipio {
+            height: 66px;
+            margin-bottom: 6px;
+        }
+
+        .card.layout-compact h1,
+        .card.layout-tight h1 {
+            font-size: 1.92rem;
+            margin-bottom: 6px;
+        }
+
+        .card.layout-tight h1 {
+            font-size: 1.72rem;
+        }
+
+        .card.layout-compact .info,
+        .card.layout-tight .info {
+            font-size: 0.88rem;
+            margin-bottom: 12px;
+        }
+
+        .card.layout-tight .info {
+            font-size: 0.82rem;
+            margin-bottom: 10px;
+        }
+
+        .card.layout-compact .fecha,
+        .card.layout-tight .fecha {
+            margin-bottom: 10px;
+            padding: 9px 14px;
+        }
+
+        .card.layout-tight .fecha {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+        }
+
+        .card.layout-compact .logo-red,
+        .card.layout-tight .logo-red {
+            height: 82px;
+            margin-bottom: 10px;
+        }
+
+        .card.layout-tight .logo-red {
+            height: 72px;
+            margin-bottom: 8px;
+        }
+
+        .card.layout-compact .nombre-farmacia,
+        .card.layout-tight .nombre-farmacia {
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+            min-height: 0;
+        }
+
+        .card.layout-tight .nombre-farmacia {
+            font-size: 1.42rem;
+            margin-bottom: 12px;
+        }
+
+        .card.layout-compact .btn,
+        .card.layout-tight .btn {
+            padding: 14px;
+            margin-bottom: 9px;
+        }
+
+        .card.layout-tight .btn {
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            gap: 10px;
+        }
+
+        .card.layout-compact .rmk-badge,
+        .card.layout-tight .rmk-badge {
+            margin-top: 10px;
+            padding: 8px 18px;
+        }
+
+        .card.layout-tight .rmk-badge {
+            margin-top: 8px;
+            padding: 7px 16px;
+        }
+
+        .card.layout-tight .rmk-badge-text {
+            font-size: 0.62rem;
+        }
+
+        .card.layout-tight .rmk-badge-brand {
+            font-size: 0.76rem;
+        }
+
+        .card.layout-compact .footer,
+        .card.layout-tight .footer {
+            margin-top: 14px;
+        }
+
+        .card.layout-tight .footer {
+            margin-top: 10px;
+            font-size: 0.58rem;
         }
 
         .emoji-layer {
@@ -94,23 +216,6 @@
             0%   { rotate: 0deg; }
             100% { rotate: 360deg; }
         }
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.08;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #aaa;
-            animation: curtainGoReverse 14s linear infinite;
-            pointer-events: none;
-            letter-spacing: 12px;
-            white-space: nowrap;
-            z-index: 0;
-        }
 
         @keyframes curtainGo {
             0% { transform: translate(-20%, -10%) rotate(0deg); }
@@ -133,8 +238,9 @@
                 width: 100%;
                 max-width: 420px;
                 height: auto;
+                max-height: min(92vh, 760px);
                 border-radius: var(--radius-lg);
-                padding: 56px 36px;
+                padding: 34px 28px 28px;
                 box-shadow: 
                     0 4px 6px -1px rgba(0, 0, 0, 0.05),
                     0 10px 20px -5px rgba(0, 0, 0, 0.1),
@@ -142,7 +248,65 @@
                     inset 0 1px 1px rgba(255, 255, 255, 0.9);
                 border: 1px solid var(--border-color);
                 justify-content: flex-start;
-                overflow-y: visible;
+                overflow-y: auto;
+            }
+        }
+
+        @media (max-height: 820px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                max-height: calc(100vh - 24px);
+                padding: 24px 20px 22px;
+            }
+
+            .logo-municipio {
+                height: 72px;
+                margin-bottom: 10px;
+            }
+
+            .localidad {
+                margin-bottom: 4px;
+            }
+
+            h1 {
+                font-size: 1.86rem;
+            }
+
+            .info {
+                font-size: 0.92rem;
+                margin-bottom: 16px;
+            }
+
+            .fecha {
+                margin-bottom: 16px;
+            }
+
+            .logo-red {
+                height: 86px;
+                margin-bottom: 12px;
+            }
+
+            .nombre-farmacia {
+                font-size: 1.55rem;
+                margin-bottom: 18px;
+                min-height: 36px;
+            }
+
+            .btn {
+                padding: 14px;
+                margin-bottom: 10px;
+            }
+
+            .rmk-badge {
+                margin-top: 8px;
+            }
+
+            .footer {
+                margin-top: 16px;
+                font-size: 0.65rem;
             }
         }
 
@@ -220,8 +384,8 @@
         }
 
         .logo-red {
-            height: 110px;
-            margin: 0 auto 16px auto;
+            height: 94px;
+            margin: 0 auto 12px auto;
             opacity: 1;
             object-fit: contain;
             max-width: 95%;
@@ -270,7 +434,8 @@
 
         @media (min-width: 481px) {
             .logo-municipio {
-                margin-bottom: 28px;
+                height: 84px;
+                margin-bottom: 20px;
             }
 
             h1 {
@@ -278,27 +443,33 @@
             }
 
             .info {
-                margin-bottom: 36px;
+                margin-bottom: 24px;
             }
 
             .fecha {
-                margin-bottom: 45px;
+                margin-bottom: 24px;
             }
 
             .nombre-farmacia {
                 font-size: 1.7rem;
-                margin-bottom: 45px;
+                margin-bottom: 24px;
                 min-height: 42px;
             }
 
             .btn {
-                padding: 20px;
-                margin-bottom: 16px;
+                padding: 16px;
+                margin-bottom: 12px;
             }
         }
 
         .btn:active {
             transform: scale(0.97);
+        }
+
+        .btn:disabled {
+            opacity: 0.56;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .btn-maps {
@@ -360,7 +531,7 @@
 
         @media (min-width: 481px) {
             .footer {
-                margin-top: 45px;
+                margin-top: 24px;
                 padding-top: 0;
                 font-size: 0.72rem;
             }
@@ -420,11 +591,12 @@
             from { box-shadow: 0 2px 10px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.08); }
             to   { box-shadow: 0 4px 24px rgba(255,255,255,0.16), 0 0 14px rgba(255,255,255,0.10), 0 0 0 1px rgba(255,255,255,0.25); }
         }
+
     </style>
 </head>
 <body>
 
-<div class="card">
+<div id="turno-card" class="card">
     <img src="img/logo-andresito.png" class="logo-municipio" alt="Logo Municipio">
 
     <div class="localidad">
@@ -445,12 +617,12 @@
         Cargando...
     </div>
 
-    <button id="btn-maps" class="btn btn-maps">
+    <button id="btn-maps" class="btn btn-maps" disabled>
         <i class="fa-solid fa-location-dot"></i>
         Cómo llegar
     </button>
 
-    <button id="btn-wpp" class="btn btn-wpp">
+    <button id="btn-wpp" class="btn btn-wpp" disabled>
         <i class="fa-brands fa-whatsapp"></i>
         WhatsApp
     </button>
