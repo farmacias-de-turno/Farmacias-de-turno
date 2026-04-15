@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Farmacia de Turno - Comandante Andresito</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
@@ -32,7 +34,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background: 
                 radial-gradient(ellipse at 20% 20%, rgba(45, 120, 100, 0.25) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 80%, rgba(30, 60, 90, 0.35) 0%, transparent 50%),
@@ -84,8 +86,9 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                0 12px 24px -8px rgba(0, 0, 0, 0.4),
+                0 30px 60px -15px rgba(0, 0, 0, 0.6),
+                0 15px 30px -10px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(114, 189, 153, 0.08),
                 inset 0 1px 1px rgba(255, 255, 255, 0.15),
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -97,7 +100,7 @@
             z-index: 2;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
         }
 
         .card::before {
@@ -416,6 +419,7 @@
             color: #ffffff;
             margin-bottom: 8px;
             line-height: 1.1;
+            text-shadow: 0 0 30px rgba(114, 189, 153, 0.3), 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .info {
@@ -513,6 +517,7 @@
             min-height: 45px;
             letter-spacing: -0.01em;
             line-height: 1.2;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
         }
 
         @keyframes oroShine {
@@ -976,17 +981,70 @@
 
     // Parallax effect on mouse move
     const card = document.getElementById('turno-card');
+    
+    function applyParallax(x, y) {
+        if (!card) return;
+        const rotateX = -y * 4;
+        const rotateY = x * 6;
+        const translateY = y * 2;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`;
+    }
+    
+    function resetParallax() {
+        if (!card) return;
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    }
+    
+    // Mouse parallax (desktop)
     if (card && window.matchMedia('(hover: hover)').matches) {
         document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 8;
-            const y = (e.clientY / window.innerHeight - 0.5) * 6;
-            card.style.transform = `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) translateY(${y * 0.5}px)`;
+            const x = (e.clientX / window.innerWidth - 0.5);
+            const y = (e.clientY / window.innerHeight - 0.5);
+            applyParallax(x, y);
         });
         
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-        });
+        document.addEventListener('mouseleave', resetParallax);
     }
+    
+    // Gyroscope parallax (mobile)
+    if (window.DeviceOrientationEvent) {
+        const requestPermission = () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        }
+                    })
+                    .catch(console.error);
+            }
+        };
+        
+        const handleOrientation = (event) => {
+            const beta = event.beta || 0;
+            const gamma = event.gamma || 0;
+            
+            const x = Math.max(-1, Math.min(1, gamma / 30));
+            const y = Math.max(-1, Math.min(1, (beta - 45) / 30));
+            
+            applyParallax(x, y);
+        };
+        
+        // Auto-enable on most devices
+        window.addEventListener('deviceorientation', handleOrientation);
+        
+        // Try to request permission on iOS
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            document.body.addEventListener('click', requestPermission, { once: true });
+        }
+    }
+    
+    // Reset on device move end
+    let resetTimeout;
+    window.addEventListener('deviceorientation', () => {
+        clearTimeout(resetTimeout);
+        resetTimeout = setTimeout(resetParallax, 100);
+    });
 
     // Background particles
     const particleLayer = document.getElementById('bg-particles');
