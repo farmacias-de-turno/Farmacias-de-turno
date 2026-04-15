@@ -123,31 +123,31 @@ function actualizarTimer() {
     
     const horaActual = ahora.getHours();
     const minutoActual = ahora.getMinutes();
+    const segundoActual = ahora.getSeconds();
     
-    let horasRestantes;
+    let horasRestantes, minutosRestantes, segundosRestantes;
+    
     if (horaActual < 8) {
         horasRestantes = (8 - horaActual - 1);
         minutosRestantes = 60 - minutoActual;
+        segundosRestantes = 60 - segundoActual;
     } else {
         horasRestantes = (24 - horaActual + 8 - 1);
         minutosRestantes = 60 - minutoActual;
+        segundosRestantes = 60 - segundoActual;
     }
     
     if (horasRestantes < 0) horasRestantes = 0;
     if (minutosRestantes === 60) minutosRestantes = 0;
+    if (segundosRestantes === 60) segundosRestantes = 0;
     
     const esUrgente = horasRestantes <= 2;
     
-    let textoTimer;
-    if (horasRestantes === 0 && minutosRestantes <= 59) {
-        textoTimer = `${minutosRestantes} min restantes`;
-    } else if (horasRestantes === 1 && minutosRestantes > 0) {
-        textoTimer = `~1h ${minutosRestantes}m restantes`;
-    } else {
-        textoTimer = `${horasRestantes}h restantes`;
-    }
+    const h = String(horasRestantes).padStart(2, '0');
+    const m = String(minutosRestantes).padStart(2, '0');
+    const s = String(segundosRestantes).padStart(2, '0');
     
-    turnoTimer.innerHTML = `<i class="fa-regular fa-clock"></i> ${textoTimer}`;
+    turnoTimer.innerHTML = `<i class="fa-regular fa-clock"></i> Finaliza en ${h}:${m}:${s}`;
     turnoTimer.style.display = 'flex';
     
     if (esUrgente) {
@@ -252,10 +252,13 @@ function actualizarTurno() {
 actualizarTurno();
 actualizarTimer();
 
-// Opcional: Revisar cada 1 minuto por si alguien tiene la web abierta a las 08:00 AM
+// Actualizar timer cada segundo, turno cada minuto
+setInterval(() => {
+    actualizarTimer();
+}, 1000);
+
 setInterval(() => {
     actualizarTurno();
-    actualizarTimer();
 }, 60000);
 
 window.addEventListener("resize", programarAjusteTarjeta);
