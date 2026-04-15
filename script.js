@@ -4,6 +4,7 @@ const btnMaps = document.getElementById("btn-maps");
 const btnWpp = document.getElementById("btn-wpp");
 const logoRed = document.querySelector(".logo-red");
 const cardElemento = document.getElementById("turno-card");
+const turnoTimer = document.getElementById("turno-timer");
 
 const TURNO_TIMEZONE = "America/Argentina/Buenos_Aires";
 const CLASES_AJUSTE_TARJETA = ["layout-compact", "layout-tight"];
@@ -108,6 +109,54 @@ function reiniciarAjusteTarjeta() {
     cardElemento.scrollTop = 0;
 }
 
+function actualizarTimer() {
+    if (!turnoTimer) return;
+    
+    const ahora = obtenerAhoraArgentina();
+    const fechaConAjuste = new Date(ahora.getTime() - (8 * 60 * 60 * 1000));
+    const fechaISO = construirFechaISO(fechaConAjuste);
+    
+    if (!turnos[fechaISO]) {
+        turnoTimer.style.display = 'none';
+        return;
+    }
+    
+    const horaActual = ahora.getHours();
+    const minutoActual = ahora.getMinutes();
+    
+    let horasRestantes;
+    if (horaActual < 8) {
+        horasRestantes = (8 - horaActual - 1);
+        minutosRestantes = 60 - minutoActual;
+    } else {
+        horasRestantes = (24 - horaActual + 8 - 1);
+        minutosRestantes = 60 - minutoActual;
+    }
+    
+    if (horasRestantes < 0) horasRestantes = 0;
+    if (minutosRestantes === 60) minutosRestantes = 0;
+    
+    const esUrgente = horasRestantes <= 2;
+    
+    let textoTimer;
+    if (horasRestantes === 0 && minutosRestantes <= 59) {
+        textoTimer = `${minutosRestantes} min restantes`;
+    } else if (horasRestantes === 1 && minutosRestantes > 0) {
+        textoTimer = `~1h ${minutosRestantes}m restantes`;
+    } else {
+        textoTimer = `${horasRestantes}h restantes`;
+    }
+    
+    turnoTimer.innerHTML = `<i class="fa-regular fa-clock"></i> ${textoTimer}`;
+    turnoTimer.style.display = 'flex';
+    
+    if (esUrgente) {
+        turnoTimer.classList.add('urgente');
+    } else {
+        turnoTimer.classList.remove('urgente');
+    }
+}
+
 function tarjetaDesbordada() {
     if (!cardElemento || !farmaciaElemento) {
         return false;
@@ -201,9 +250,13 @@ function actualizarTurno() {
 
 // Ejecutar al cargar
 actualizarTurno();
+actualizarTimer();
 
 // Opcional: Revisar cada 1 minuto por si alguien tiene la web abierta a las 08:00 AM
-setInterval(actualizarTurno, 60000);
+setInterval(() => {
+    actualizarTurno();
+    actualizarTimer();
+}, 60000);
 
 window.addEventListener("resize", programarAjusteTarjeta);
 window.addEventListener("orientationchange", programarAjusteTarjeta);
