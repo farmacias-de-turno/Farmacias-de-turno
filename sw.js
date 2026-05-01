@@ -1,13 +1,24 @@
-const CACHE_NAME = 'farmacia-v1';
+const CACHE_NAME = 'farmacia-v2';
+const ASSETS = [
+    './',
+    './index.html',
+    './script.js',
+    './manifest.json',
+    './img/logo-andresito.png',
+    './img/redfarmako.png'
+];
 
 // Instalación del Service Worker
 self.addEventListener('install', (event) => {
-    self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(ASSETS);
+        })
+    );
 });
 
-// El evento fetch es obligatorio para que aparezca la opción de "Descargar app"
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        fetch(event.request).catch(() => caches.match(event.request))
+        caches.match(event.request).then(response => response || fetch(event.request))
     );
 });

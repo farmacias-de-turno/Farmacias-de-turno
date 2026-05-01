@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Farmacia de Turno - Comandante Andresito</title>
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#72bd99">
+    <link rel="apple-touch-icon" href="img/logo-andresito.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -184,34 +186,38 @@
 
         .card.layout-compact .logo-red,
         .card.layout-tight .logo-red {
-            height: 110px;
+            height: 200px; /* Logo más grande en layout compact */
         }
 
         .card.layout-tight .logo-red {
-            height: 88px;
+            height: 160px; /* Logo más grande en layout tight */
         }
 
         .card.layout-compact .logo-red-wrapper,
         .card.layout-tight .logo-red-wrapper {
-            padding: 4px 0 12px;
-            margin-bottom: 2px;
+            padding: 0;
+            margin-bottom: -55px; /* Ajuste final para pegar texto al logo */
         }
 
         .card.layout-tight .logo-red-wrapper {
-            padding: 2px 0 10px;
+            padding: 0;
+            margin-bottom: -45px;
         }
 
         .card.layout-compact .nombre-farmacia,
         .card.layout-tight .nombre-farmacia {
-            font-size: 1.6rem;
+            font-size: 1.6rem; /* Reducido un poco para dar espacio al logo */
             margin-bottom: 16px;
             min-height: 0;
+            margin-top: 0px; /* Pegamos el texto al logo */
         }
 
         .card.layout-tight .nombre-farmacia {
             font-size: 1.42rem;
             margin-bottom: 12px;
+            margin-top: 0px; /* Pegamos el texto al logo */
         }
+
 
         .card.layout-compact .btn,
         .card.layout-tight .btn {
@@ -493,8 +499,8 @@
             position: relative;
             justify-content: center;
             align-items: center;
-            padding: 6px 0 18px;
-            margin-bottom: 4px;
+            padding: 0;
+            margin-bottom: -90px; /* Margen extremo para dejarlo bien cerca de la imagen */
         }
 
         .logo-red-wrapper::after {
@@ -514,7 +520,7 @@
         }
 
         .logo-red {
-            height: 155px;
+            height: 190px; /* Tamaño grande pero seguro para no desbordar la card */
             margin: 0 auto;
             opacity: 1;
             object-fit: contain;
@@ -928,8 +934,11 @@
 
         /* Nombre más grande en modo RMK */
         .nombre-farmacia--rmk {
-            font-size: 2.15rem;
+            font-size: 2.1rem; /* Un toque más chico para que el logo resalte más */
             letter-spacing: -0.02em;
+            margin-top: 0px; /* Pegamos el texto al logo */
+            position: relative;
+            z-index: 2; /* Asegura que el texto esté por encima de cualquier sombra del logo */
         }
 
         /* Separador visual entre secciones */

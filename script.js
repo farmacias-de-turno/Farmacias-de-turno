@@ -48,6 +48,7 @@ const logoRed = document.getElementById('logo-red-wrapper');
 const cardElemento = document.getElementById("turno-card");
 const turnoTimer = document.getElementById("turno-timer");
 
+let ultimaFarmaciaMostrada = "";
 const TURNO_TIMEZONE = "America/Argentina/Buenos_Aires";
 const CLASES_AJUSTE_TARJETA = ["layout-compact", "layout-tight"];
 
@@ -273,7 +274,11 @@ function actualizarTurno() {
                 .replace("Red Farmako", "")
                 .replace("Farmacia", "")
                 .trim();
-            lanzarConfetti();
+            
+            if (ultimaFarmaciaMostrada !== info.farmacia) {
+                lanzarConfetti();
+                ultimaFarmaciaMostrada = info.farmacia;
+            }
         } else {
             logoRed.style.display = "none";
             cardElemento.classList.remove("card--rmk");
