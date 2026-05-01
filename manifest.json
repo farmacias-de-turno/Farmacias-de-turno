@@ -1,0 +1,21 @@
+{
+  "name": "Farmacias de Turno",
+  "short_name": "Farmacias",
+  "description": "Consulta qué farmacia está de turno hoy.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#72bd99",
+  "icons": [
+    {
+      "src": "img/logo-andresito.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/logo-andresito.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

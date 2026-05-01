@@ -1,3 +1,45 @@
+// Registro de Service Worker para habilitar la "Descarga de la App" (PWA)
+let deferredPrompt;
+const installBanner = document.getElementById('pwa-install-banner');
+const installBtn = document.getElementById('pwa-install-btn');
+const closeBtn = document.getElementById('pwa-close-btn');
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('PWA lista para descargar'))
+            .catch(err => console.log('Error al configurar PWA', err));
+    });
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Solo mostramos el anuncio si el usuario no lo ha cerrado previamente
+    if (!localStorage.getItem('pwa-banner-dismissed')) {
+        setTimeout(() => {
+            if (installBanner) installBanner.style.display = 'flex';
+        }, 3000);
+    }
+});
+
+installBtn?.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBanner.style.display = 'none';
+        if (outcome === 'accepted') localStorage.setItem('pwa-banner-dismissed', 'true');
+    }
+});
+
+closeBtn?.addEventListener('click', () => {
+    installBanner.style.display = 'none';
+    // Guardamos la elección para no ser intrusivos en el futuro
+    localStorage.setItem('pwa-banner-dismissed', 'true');
+});
+
 const farmaciaElemento = document.getElementById("nombre-farmacia");
 const fechaElemento = document.getElementById("fecha");
 const btnMaps = document.getElementById("btn-maps");

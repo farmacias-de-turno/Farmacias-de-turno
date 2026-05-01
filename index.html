@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Farmacia de Turno - Comandante Andresito</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -957,6 +958,75 @@
             vertical-align: middle;
         }
 
+        /* Estilos del Anuncio PWA Sutil */
+        .pwa-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 28, 45, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(114, 189, 153, 0.3);
+            border-radius: 20px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 92%;
+            max-width: 380px;
+            animation: pwaSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes pwaSlideUp {
+            from { transform: translate(-50%, 150%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        .pwa-banner img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: rgba(255,255,255,0.1);
+            padding: 4px;
+        }
+
+        .pwa-text { flex: 1; }
+        .pwa-text span {
+            display: block;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .pwa-text p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.7rem;
+            margin: 0;
+        }
+
+        .pwa-actions { display: flex; gap: 8px; }
+        .pwa-btn-install {
+            background: var(--primary);
+            color: #0a1628;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .pwa-btn-close {
+            background: transparent;
+            color: rgba(255,255,255,0.4);
+            border: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -1019,6 +1089,19 @@
     <footer class="footer">
         © 2026 Braulio · Comandante Andresito
     </footer>
+</div>
+
+<!-- Anuncio de Instalación Sutil -->
+<div id="pwa-install-banner" class="pwa-banner" style="display: none;">
+    <img src="img/logo-andresito.png" alt="App Icon">
+    <div class="pwa-text">
+        <span>¿Instalar aplicación?</span>
+        <p>Accede más rápido a los turnos</p>
+    </div>
+    <div class="pwa-actions">
+        <button id="pwa-install-btn" class="pwa-btn-install">Instalar</button>
+        <button id="pwa-close-btn" class="pwa-btn-close">Luego</button>
+    </div>
 </div>
 
 <div class="emoji-layer" id="emoji-layer"></div>
