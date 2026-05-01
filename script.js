@@ -2,7 +2,7 @@ const farmaciaElemento = document.getElementById("nombre-farmacia");
 const fechaElemento = document.getElementById("fecha");
 const btnMaps = document.getElementById("btn-maps");
 const btnWpp = document.getElementById("btn-wpp");
-const logoRed = document.querySelector(".logo-red");
+const logoRed = document.getElementById('logo-red-wrapper');
 const cardElemento = document.getElementById("turno-card");
 const turnoTimer = document.getElementById("turno-timer");
 
@@ -224,7 +224,9 @@ function actualizarTurno() {
         let nombreMostrar = info.farmacia;
 
         if (info.farmacia.includes("Red Farmako")) {
-            logoRed.style.display = "block";
+            logoRed.style.display = "flex";
+            cardElemento.classList.add("card--rmk");
+            farmaciaElemento.classList.add("nombre-farmacia--rmk");
             nombreMostrar = info.farmacia
                 .replace("Red Farmako", "")
                 .replace("Farmacia", "")
@@ -232,7 +234,8 @@ function actualizarTurno() {
             lanzarConfetti();
         } else {
             logoRed.style.display = "none";
-            // Agregar prefijo solo si el nombre no tiene marca propia
+            cardElemento.classList.remove("card--rmk");
+            farmaciaElemento.classList.remove("nombre-farmacia--rmk");
             if (!/^(farmacia|farma)/i.test(nombreMostrar)) {
                 nombreMostrar = "Farmacia " + nombreMostrar;
             }
