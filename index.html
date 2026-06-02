@@ -144,13 +144,13 @@
 
         .card.layout-compact .logo-municipio,
         .card.layout-tight .logo-municipio {
-            height: 74px;
-            margin-bottom: 8px;
+            height: 66px;
+            margin-bottom: 6px;
         }
 
         .card.layout-tight .logo-municipio {
-            height: 66px;
-            margin-bottom: 6px;
+            height: 58px;
+            margin-bottom: 4px;
         }
 
         .card.layout-compact h1,
@@ -306,8 +306,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: clamp(4px, 1vh, 12px) 0;
-            gap: clamp(8px, 2.5vh, 24px);
+            padding: clamp(2px, 0.6vh, 8px) 0;
+            gap: clamp(6px, 1.6vh, 14px);
         }
 
         .card-actions {
@@ -366,14 +366,15 @@
             .logo-red { max-width: 100%; max-height: 100%; width: auto; height: auto; }
             .logo-red-wrapper { padding: 2px 0 6px; }
             .nombre-farmacia { font-size: clamp(1.2rem, 3.5vh, 1.6rem); margin-bottom: 6px; }
+            .nombre-farmacia--rmk { font-size: clamp(1.2rem, 4vh, 2rem); }
             .btn { padding: 10px; margin-bottom: 6px; font-size: 0.88rem; }
             .rmk-badge { padding: 6px 14px; margin-top: 4px; }
             .footer { margin-top: 4px; }
         }
 
         .logo-municipio {
-            height: clamp(42px, 7.5vh, 80px);
-            margin: 0 auto clamp(3px, 0.6vh, 6px) auto;
+            height: clamp(72px, 12vh, 96px);
+            margin: 0 auto clamp(4px, 0.8vh, 8px) auto;
             object-fit: contain;
             opacity: 1;
             max-width: 90%;
@@ -460,7 +461,7 @@
         .logo-red-wrapper {
             position: relative;
             width: 92%;
-            height: clamp(90px, 22vh, 200px);
+            height: clamp(60px, 13vh, 110px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -495,7 +496,7 @@
         }
 
         .nombre-farmacia {
-            font-size: clamp(1.5rem, 7.5vh, 3.2rem);
+            font-size: clamp(1.4rem, 7vh, 2.8rem);
             font-weight: 700;
             color: #ffffff;
             background: linear-gradient(90deg, rgba(255,255,255,1) 20%, rgba(255,215,0,0.95) 40%, rgba(255,255,255,1) 60%);
@@ -537,8 +538,8 @@
 
         @media (min-width: 481px) {
             .logo-municipio {
-                height: 84px;
-                margin-bottom: 20px;
+                height: 92px;
+                margin-bottom: 16px;
             }
 
             h1 {
@@ -895,9 +896,9 @@
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2) !important;
         }
 
-        /* Nombre más grande en modo RMK */
+        /* Nombre en modo RMK: grande pero nunca mayor que el logo del municipio */
         .nombre-farmacia--rmk {
-            font-size: clamp(2.8rem, 16vw, 5.5rem);
+            font-size: clamp(2rem, 12vw, 3.8rem);
             letter-spacing: -0.03em;
             line-height: 1.1;
         }
