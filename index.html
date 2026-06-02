@@ -144,113 +144,120 @@
 
         .card.layout-compact .logo-municipio,
         .card.layout-tight .logo-municipio {
-            height: 66px;
-            margin-bottom: 6px;
+            height: 38px;
+            margin-bottom: 4px;
         }
 
         .card.layout-tight .logo-municipio {
-            height: 58px;
-            margin-bottom: 4px;
+            height: 32px;
+            margin-bottom: 2px;
         }
 
         .card.layout-compact h1,
         .card.layout-tight h1 {
-            font-size: 1.92rem;
-            margin-bottom: 6px;
+            font-size: 1.75rem;
+            margin-bottom: 4px;
         }
 
         .card.layout-tight h1 {
-            font-size: 1.72rem;
+            font-size: 1.55rem;
         }
 
         .card.layout-compact .info,
         .card.layout-tight .info {
-            font-size: 0.88rem;
-            margin-bottom: 12px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
         }
 
         .card.layout-tight .info {
-            font-size: 0.82rem;
-            margin-bottom: 10px;
+            font-size: 0.65rem;
+            margin-bottom: 8px;
         }
 
         .card.layout-compact .fecha,
         .card.layout-tight .fecha {
-            margin-bottom: 10px;
-            padding: 9px 14px;
+            font-size: 1.1rem;
+            padding: 8px 14px;
+            margin-bottom: 8px;
         }
 
         .card.layout-tight .fecha {
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            font-size: 0.82rem;
+            font-size: 1rem;
+            padding: 7px 12px;
+            margin-bottom: 6px;
+        }
+
+        .card.layout-compact .card-turno,
+        .card.layout-tight .card-turno {
+            padding-top: 18px;
+            gap: 8px;
+        }
+
+        .card.layout-tight .card-turno {
+            padding-top: 12px;
+            gap: 6px;
+        }
+
+        .card.layout-compact .card-actions,
+        .card.layout-tight .card-actions {
+            padding-top: 14px;
+        }
+
+        .card.layout-tight .card-actions {
+            padding-top: 10px;
         }
 
         .card.layout-compact .logo-red-wrapper,
         .card.layout-tight .logo-red-wrapper {
-            padding: 2px 0 10px;
-            margin-bottom: 0;
+            height: 44px;
         }
 
         .card.layout-tight .logo-red-wrapper {
-            padding: 2px 0 8px;
+            height: 38px;
         }
 
         .card.layout-compact .nombre-farmacia,
         .card.layout-tight .nombre-farmacia {
-            font-size: 1.6rem; /* Reducido un poco para dar espacio al logo */
-            margin-bottom: 16px;
+            font-size: 1.5rem;
             min-height: 0;
-            margin-top: 0px; /* Pegamos el texto al logo */
         }
 
         .card.layout-tight .nombre-farmacia {
-            font-size: 1.42rem;
-            margin-bottom: 12px;
-            margin-top: 0px; /* Pegamos el texto al logo */
+            font-size: 1.3rem;
         }
-
 
         .card.layout-compact .btn,
         .card.layout-tight .btn {
-            padding: 14px;
-            margin-bottom: 9px;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 1rem;
         }
 
         .card.layout-tight .btn {
-            padding: 12px;
-            margin-bottom: 8px;
+            padding: 10px;
+            margin-bottom: 6px;
             font-size: 0.9rem;
             gap: 10px;
         }
 
         .card.layout-compact .rmk-badge,
         .card.layout-tight .rmk-badge {
-            margin-top: 10px;
-            padding: 8px 18px;
+            margin-top: 8px;
+            padding: 6px 14px;
         }
 
         .card.layout-tight .rmk-badge {
-            margin-top: 8px;
-            padding: 7px 16px;
-        }
-
-        .card.layout-tight .rmk-badge-text {
-            font-size: 0.62rem;
-        }
-
-        .card.layout-tight .rmk-badge-brand {
-            font-size: 0.76rem;
+            margin-top: 6px;
+            padding: 5px 12px;
         }
 
         .card.layout-compact .footer,
         .card.layout-tight .footer {
-            margin-top: 14px;
+            margin-top: 8px;
         }
 
         .card.layout-tight .footer {
-            margin-top: 10px;
-            font-size: 0.58rem;
+            margin-top: 6px;
         }
 
         .emoji-layer {
@@ -305,13 +312,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: clamp(2px, 0.6vh, 8px) 0;
-            gap: clamp(6px, 1.6vh, 14px);
+            justify-content: flex-start;
+            padding: clamp(30px, 5vh, 52px) 0 0;
+            gap: clamp(10px, 1.8vh, 18px);
         }
 
         .card-actions {
             flex-shrink: 0;
+            padding-top: clamp(22px, 4vh, 44px);
         }
 
         @media (min-width: 481px) {
@@ -358,8 +366,9 @@
             .logo-municipio { height: clamp(30px, 5vh, 44px); margin-bottom: 2px; }
             .localidad { margin-bottom: 2px; }
             h1 { font-size: clamp(1.2rem, 3vh, 1.7rem); margin-bottom: 2px; }
-            .info { font-size: 0.75rem; margin-bottom: 6px; }
-            .fecha { padding: 7px 12px; margin-bottom: 4px; font-size: 0.8rem; }
+            .h1-accent { font-size: clamp(0.9rem, 2.2vh, 1.3rem); }
+            .info { font-size: 0.7rem; margin-bottom: 6px; }
+            .fecha { padding: 6px 12px; margin-bottom: 4px; font-size: 0.9rem; width: 85%; }
             .turno-timer { margin-bottom: 6px; }
             .divider { margin: 4px 0 2px; }
             .logo-red-wrapper { height: clamp(50px, 10vh, 80px); }
@@ -373,8 +382,8 @@
         }
 
         .logo-municipio {
-            height: clamp(64px, 11vh, 90px);
-            margin: 0 auto clamp(4px, 0.8vh, 8px) auto;
+            height: clamp(38px, 5.5vh, 52px);
+            margin: 0 auto 8px auto;
             object-fit: contain;
             opacity: 1;
             max-width: 90%;
@@ -382,57 +391,61 @@
         }
 
         .localidad {
-            font-size: clamp(0.62rem, 1.6vw, 0.72rem);
+            font-size: 0.75rem;
             font-weight: 700;
             color: #e0f7f0;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: clamp(1px, 0.4vh, 3px);
+            letter-spacing: 0.14em;
+            margin-bottom: 4px;
         }
 
         h1 {
-            font-size: clamp(1.1rem, 5.5vw, 2.2rem);
+            font-size: 2.25rem;
             font-weight: 800;
             letter-spacing: -0.03em;
             color: #ffffff;
-            margin-bottom: clamp(3px, 0.6vh, 6px);
+            margin-bottom: 6px;
             line-height: 1.1;
             text-shadow: 0 0 30px rgba(114, 189, 153, 0.3), 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .info {
-            font-size: clamp(0.7rem, 1.8vw, 0.84rem);
-            line-height: 1.35;
+            font-size: 0.75rem;
+            line-height: 1.5;
             color: #e2ecf5;
-            margin-bottom: clamp(6px, 1.1vh, 10px);
+            margin-bottom: clamp(14px, 2.2vh, 26px);
             padding: 0 4px;
         }
 
         .fecha {
             background-color: rgba(255,255,255,0.12);
             border: 1px solid rgba(255,255,255,0.24);
-            padding: clamp(5px, 0.9vh, 9px) 14px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: clamp(0.78rem, 2vw, 0.88rem);
+            padding: clamp(10px, 1.4vh, 14px) 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.375rem;
             color: #ffffff;
-            margin-bottom: clamp(4px, 0.8vh, 7px);
-            display: inline-block;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 85%;
         }
 
         .turno-timer {
-            font-size: clamp(0.72rem, 1.9vw, 0.8rem);
-            color: rgba(114, 189, 153, 0.9);
-            margin-bottom: clamp(3px, 0.6vh, 7px);
+            font-size: 0.875rem;
+            color: rgba(114, 189, 153, 0.85);
+            margin: 0 auto clamp(3px, 0.5vh, 6px);
             font-weight: 500;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 6px 12px;
+            padding: 5px 16px;
             background: rgba(114, 189, 153, 0.1);
             border-radius: 20px;
             border: 1px solid rgba(114, 189, 153, 0.2);
+            width: fit-content;
             animation: timerFade 0.5s ease;
         }
 
@@ -461,7 +474,7 @@
         .logo-red-wrapper {
             position: relative;
             width: 92%;
-            height: clamp(60px, 13vh, 110px);
+            height: clamp(48px, 7vh, 70px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -496,7 +509,7 @@
         }
 
         .nombre-farmacia {
-            font-size: clamp(1.4rem, 7vh, 2.8rem);
+            font-size: clamp(1.5rem, 6.5vh, 3rem);
             font-weight: 700;
             color: #ffffff;
             background: linear-gradient(90deg, rgba(255,255,255,1) 20%, rgba(255,215,0,0.95) 40%, rgba(255,255,255,1) 60%);
@@ -524,40 +537,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            padding: clamp(11px, 2vh, 16px);
+            width: 85%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: clamp(13px, 1.8vh, 16px);
             border-radius: var(--radius-md);
-            font-size: clamp(0.86rem, 2.2vw, 0.95rem);
+            font-size: 1.125rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             gap: 12px;
-            margin-bottom: clamp(7px, 1.1vh, 10px);
+            margin-bottom: 10px;
         }
 
         @media (min-width: 481px) {
             .logo-municipio {
-                height: 92px;
-                margin-bottom: 16px;
+                height: 52px;
+                margin-bottom: 8px;
             }
 
             h1 {
-                font-size: 1.9rem;
-            }
-
-            .info {
-                margin-bottom: 24px;
-            }
-
-            .fecha {
-                margin-bottom: 24px;
+                font-size: 2.25rem;
             }
 
             .nombre-farmacia {
-                font-size: 1.7rem;
-                margin-bottom: 24px;
-                min-height: 42px;
+                font-size: 2rem;
+                min-height: 0;
             }
 
             .btn {
@@ -687,11 +693,11 @@
             }
         }
 
-        /* Footer casi invisible */
+        /* Footer — el texto más tenue de toda la tarjeta */
         .footer {
-            margin-top: clamp(4px, 0.8vh, 10px);
+            margin-top: 8px;
             padding-top: 0;
-            font-size: clamp(0.52rem, 1.5vw, 0.6rem);
+            font-size: 0.5625rem;
             color: var(--text-muted);
             opacity: 0.25;
             font-weight: 500;
@@ -701,9 +707,8 @@
 
         @media (min-width: 481px) {
             .footer {
-                margin-top: 24px;
-                padding-top: 0;
-                font-size: 0.72rem;
+                margin-top: 16px;
+                font-size: 0.6rem;
             }
         }
 
@@ -736,7 +741,7 @@
         }
 
         .rmk-badge-text {
-            font-size: 0.67rem;
+            font-size: 0.6875rem;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.85);
             text-shadow: 0 0 12px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.4);
@@ -745,7 +750,7 @@
         }
 
         .rmk-badge-brand {
-            font-size: 0.80rem;
+            font-size: 0.6875rem;
             font-weight: 800;
             background: linear-gradient(90deg, #ffffff 0%, #72bd99 30%, #ffffff 55%, #72bd99 80%, #ffffff 100%);
             background-size: 300% 100%;
@@ -896,9 +901,9 @@
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2) !important;
         }
 
-        /* Nombre RMK: un toque más chico que el logo del municipio */
+        /* "Central" / nombre RMK: elemento de mayor peso visual, ~55px */
         .nombre-farmacia--rmk {
-            font-size: clamp(2.4rem, 9vh, 4.5rem);
+            font-size: clamp(2.2rem, 6.5vh, 3.4rem);
             letter-spacing: -0.03em;
             line-height: 1.1;
         }
@@ -912,8 +917,9 @@
             flex-shrink: 0;
         }
 
-        /* Acento verde en el h1 */
+        /* "de Turno" — más chico y verde, mismo renglón que "Farmacia" */
         .h1-accent {
+            font-size: 1.5rem;
             color: #72bd99;
             font-weight: 800;
         }
@@ -923,10 +929,9 @@
             content: '\f073';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
-            margin-right: 7px;
+            margin-right: 8px;
             opacity: 0.65;
-            font-size: 0.8rem;
-            vertical-align: middle;
+            font-size: 1.1rem;
         }
 
         /* Estilos del Anuncio PWA Sutil */
