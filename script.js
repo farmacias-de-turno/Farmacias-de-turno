@@ -7,8 +7,21 @@ const closeBtn = document.getElementById('pwa-close-btn');
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('PWA lista para descargar'))
+            .then(reg => {
+                console.log('PWA lista para descargar');
+                // Forzar chequeo de versión en cada carga para detectar script.js nuevo
+                reg.update();
+            })
             .catch(err => console.log('Error al configurar PWA', err));
+    });
+
+    // Cuando el nuevo SW toma control, recargar para servir el script.js fresco
+    let recargando = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!recargando) {
+            recargando = true;
+            window.location.reload();
+        }
     });
 }
 
