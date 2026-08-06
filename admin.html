@@ -516,8 +516,165 @@
       opacity: 1;
     }
 
+    /* ── Emergencia ── */
+    .emergencia-card {
+      background: linear-gradient(135deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .seccion-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 18px;
+    }
+
+    .warning-box {
+      padding: 12px 16px;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--warning);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .emergencia-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .form-group input[type="date"],
+    .form-group select {
+      padding: 12px 14px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .form-group input[type="date"]:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(114,189,153,0.15);
+    }
+
+    .form-group select option { background: #1e293b; }
+
+    .btn-aplicar {
+      padding: 12px 26px;
+      background: linear-gradient(145deg, var(--primary), var(--primary-hover));
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-aplicar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(114,189,153,0.4);
+    }
+
+    .btn-aplicar:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .override-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .override-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      gap: 12px;
+    }
+
+    .override-item.hoy {
+      border-color: rgba(114,189,153,0.4);
+      background: rgba(114,189,153,0.07);
+    }
+
+    .override-fecha {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .override-farmacia {
+      font-weight: 600;
+      font-size: 0.95rem;
+      flex: 1;
+    }
+
+    .btn-del-override {
+      padding: 7px 14px;
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 8px;
+      color: var(--danger);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-del-override:hover { background: rgba(248,113,113,0.22); }
+
+    .empty-overrides {
+      text-align: center;
+      padding: 28px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
+      .emergencia-form {
+        grid-template-columns: 1fr;
+      }
       .turno-row {
         grid-template-columns: 1fr 1fr;
       }
@@ -560,6 +717,7 @@
 
   <div class="tabs">
     <button class="tab-btn active" onclick="cambiarTab('visitas')">📊 Visitas</button>
+    <button class="tab-btn" onclick="cambiarTab('emergencia')">⚡ Emergencia</button>
     <button class="tab-btn" onclick="cambiarTab('turnos')">📅 Turnos</button>
     <button class="tab-btn" onclick="cambiarTab('config')">⚙️ Config</button>
   </div>
@@ -599,6 +757,46 @@
       <h2>Detalle por día</h2>
       <div id="tabla-container"><div class="loader">Cargando datos…</div></div>
       <div class="refresh-info" id="refresh-info"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Emergencia -->
+  <div id="tab-emergencia" class="tab-content">
+    <div class="emergencia-card">
+      <h2 class="seccion-title">⚡ Cambio de Turno de Emergencia</h2>
+      <div class="warning-box">
+        <i class="fas fa-exclamation-triangle"></i>&nbsp;
+        Este cambio sobreescribe el calendario oficial solo para la fecha indicada.
+        El cambio se aplica en tiempo real para todos los usuarios, sin necesidad de recargar.
+        El resto de los turnos no se modifica.
+      </div>
+      <div class="emergencia-form">
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="override-fecha">
+        </div>
+        <div class="form-group">
+          <label>Farmacia de reemplazo</label>
+          <select id="override-farmacia">
+            <option value="avenida">Avenida</option>
+            <option value="central">Red Farmako — Central</option>
+            <option value="farmanat">Farmanat</option>
+            <option value="farmavida">Red Farmako — Farmavida</option>
+            <option value="libertad">Red Farmako — Libertad</option>
+            <option value="fiorella">Farma Fiorella (Ex Sol Del Norte)</option>
+            <option value="vital">Farmacia Vital</option>
+            <option value="andresito">Andresito</option>
+          </select>
+        </div>
+        <button class="btn-aplicar" id="btn-aplicar" onclick="guardarOverride()">
+          <i class="fas fa-bolt"></i> Aplicar
+        </button>
+      </div>
+    </div>
+
+    <div class="emergencia-card">
+      <h2 class="seccion-title">📋 Cambios Activos</h2>
+      <div id="overrides-list"><div class="loader">Cargando...</div></div>
     </div>
   </div>
 
@@ -708,14 +906,30 @@
     setTimeout(() => el.classList.remove('show'), duration);
   }
 
+  // ── Base de datos de farmacias (para los overrides) ──
+  const FARMACIAS_DB = {
+    'avenida':   {farmacia:'Avenida',                          maps:'https://maps.app.goo.gl/5bQAsLomLDrukSbV9', whatsapp:'https://wa.link/sgxtlc'},
+    'central':   {farmacia:'Red Farmako Farmacia Central',     maps:'https://maps.app.goo.gl/tEC8riH4RKpigxkw9', whatsapp:'https://wa.link/qpba4b'},
+    'farmanat':  {farmacia:'Farmanat',                         maps:'https://maps.app.goo.gl/mDYA4AhvEz3kJPRH9', whatsapp:'https://wa.link/7g8t67'},
+    'farmavida': {farmacia:'Red Farmako Farmavida',            maps:'https://maps.app.goo.gl/tuUsAGeGT3jeeg7B8', whatsapp:'https://wa.link/mpvw1p'},
+    'libertad':  {farmacia:'Red Farmako Libertad',             maps:'https://maps.app.goo.gl/yzxJ5dzcD6AhPzae6', whatsapp:'https://wa.link/wts1ui'},
+    'fiorella':  {farmacia:'Farma Fiorella (Ex Sol Del Norte)',maps:'https://maps.app.goo.gl/SG5ZjdTk6BvRHFAaA', whatsapp:'https://wa.link/vyzpgz'},
+    'vital':     {farmacia:'Farmacia Vital',                   maps:'https://maps.app.goo.gl/rEbphDL5EbjfG1YZA', whatsapp:'https://wa.me/543757442816'},
+    'andresito': {farmacia:'Andresito',                        maps:'https://maps.app.goo.gl/LvWpQRcGqmw3KtP9A', whatsapp:'https://wa.link/ilssy6'},
+  };
+
   // ── Tabs ──
   function cambiarTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelector(`.tab-btn[onclick="cambiarTab('${tab}')"]`).classList.add('active');
     document.getElementById(`tab-${tab}`).classList.add('active');
-    
+
     if (tab === 'turnos') cargarEditorTurnos();
+    if (tab === 'emergencia') {
+      document.getElementById('override-fecha').value = fechaArgentina(0);
+      cargarOverridesAdmin();
+    }
   }
 
   // ── Login ──
@@ -956,6 +1170,77 @@
     a.download = `visitas_farmacias_${fechaArgentina(0)}.csv`;
     a.click();
     showNotification('CSV exportado correctamente');
+  };
+
+  // ── Overrides de Emergencia ──
+  async function cargarOverridesAdmin() {
+    const listEl = document.getElementById('overrides-list');
+    listEl.innerHTML = '<div class="loader">Cargando...</div>';
+    try {
+      const snap = await db.collection('overrides').orderBy('fecha', 'asc').get();
+      if (snap.empty) {
+        listEl.innerHTML = '<div class="empty-overrides">No hay cambios activos en este momento.</div>';
+        return;
+      }
+      const hoy = fechaArgentina(0);
+      let html = '<div class="override-list">';
+      snap.forEach(doc => {
+        const d = doc.data();
+        const esHoy = doc.id === hoy;
+        html += `
+          <div class="override-item ${esHoy ? 'hoy' : ''}">
+            <span class="override-fecha">
+              ${formatearFecha(doc.id)}
+              ${esHoy ? '<span class="badge-hoy">HOY</span>' : ''}
+            </span>
+            <span class="override-farmacia">${d.farmacia}</span>
+            <button class="btn-del-override" onclick="eliminarOverride('${doc.id}')">
+              <i class="fas fa-undo"></i> Revertir
+            </button>
+          </div>`;
+      });
+      html += '</div>';
+      listEl.innerHTML = html;
+    } catch (e) {
+      listEl.innerHTML = '<div class="loader">Error al cargar. Verificá las reglas de Firestore.</div>';
+    }
+  }
+
+  window.guardarOverride = async function() {
+    const fecha = document.getElementById('override-fecha').value;
+    const key   = document.getElementById('override-farmacia').value;
+    if (!fecha) { showNotification('⚠️ Seleccioná una fecha'); return; }
+    const farm = FARMACIAS_DB[key];
+    if (!farm)  { showNotification('⚠️ Farmacia inválida'); return; }
+    const btn = document.getElementById('btn-aplicar');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando…';
+    try {
+      await db.collection('overrides').doc(fecha).set({
+        farmacia: farm.farmacia,
+        maps:     farm.maps,
+        whatsapp: farm.whatsapp,
+        fecha:    fecha
+      });
+      showNotification(`✓ Cambio aplicado: ${farm.farmacia} para el ${formatearFecha(fecha)}`);
+      cargarOverridesAdmin();
+    } catch (e) {
+      showNotification('❌ Error al guardar. Verificá las reglas de Firestore.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-bolt"></i> Aplicar';
+    }
+  };
+
+  window.eliminarOverride = async function(fecha) {
+    if (!confirm(`¿Revertir el cambio del ${formatearFecha(fecha)} y volver al turno original?`)) return;
+    try {
+      await db.collection('overrides').doc(fecha).delete();
+      showNotification('↩ Cambio revertido. Vuelve el turno original.');
+      cargarOverridesAdmin();
+    } catch (e) {
+      showNotification('❌ Error al revertir.');
+    }
   };
 
   // ── Cambiar password ──

@@ -139,7 +139,7 @@ const turnos = {
     "2026-08-03":{farmacia:"Andresito",maps:"https://maps.app.goo.gl/LvWpQRcGqmw3KtP9A",whatsapp:"https://wa.link/ilssy6"},
     "2026-08-04":{farmacia:"Farma Fiorella (Ex Sol Del Norte)",maps:"https://maps.app.goo.gl/SG5ZjdTk6BvRHFAaA",whatsapp:"https://wa.link/vyzpgz"},
     "2026-08-05":{farmacia:"Red Farmako Farmacia Central",maps:"https://maps.app.goo.gl/tEC8riH4RKpigxkw9",whatsapp:"https://wa.link/qpba4b"},
-    "2026-08-06":{farmacia:"Farmanat",maps:"https://maps.app.goo.gl/mDYA4AhvEz3kJPRH9",whatsapp:"https://wa.link/7g8t67"},
+    "2026-08-06":{farmacia:"Farmacia Vital",maps:"https://maps.app.goo.gl/rEbphDL5EbjfG1YZA",whatsapp:"https://wa.me/543757442816"},
     "2026-08-07":{farmacia:"Red Farmako Farmavida",maps:"https://maps.app.goo.gl/tuUsAGeGT3jeeg7B8",whatsapp:"https://wa.link/mpvw1p"},
     "2026-08-08":{farmacia:"Red Farmako Libertad",maps:"https://maps.app.goo.gl/yzxJ5dzcD6AhPzae6",whatsapp:"https://wa.link/wts1ui"},
     "2026-08-09":{farmacia:"Farma Fiorella (Ex Sol Del Norte)",maps:"https://maps.app.goo.gl/SG5ZjdTk6BvRHFAaA",whatsapp:"https://wa.link/vyzpgz"},
@@ -387,6 +387,42 @@ setInterval(() => {
 setInterval(() => {
     actualizarTurno();
 }, 60000);
+
+/* ===============================
+   OVERRIDES DE EMERGENCIA (Firestore)
+   Permite cambiar un turno puntual desde el panel admin
+   sin modificar el calendario base.
+   ================================= */
+async function cargarOverrides() {
+    try {
+        const PROJECT = 'farmacias-de-turno-75b56';
+        const API_KEY = 'AIzaSyBO_gf6FCTTce_-wfdI8bfVxIhTd2E4EAQ';
+        const url = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/overrides?key=${API_KEY}`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.documents || data.documents.length === 0) return;
+        let huboCambio = false;
+        data.documents.forEach(doc => {
+            const fecha = doc.name.split('/').pop();
+            const f = doc.fields || {};
+            if (f.farmacia && f.farmacia.stringValue) {
+                turnos[fecha] = {
+                    farmacia: f.farmacia.stringValue,
+                    maps:     (f.maps     && f.maps.stringValue)     || '',
+                    whatsapp: (f.whatsapp && f.whatsapp.stringValue) || ''
+                };
+                huboCambio = true;
+            }
+        });
+        if (huboCambio) {
+            actualizarTurno();
+            actualizarTimer();
+        }
+    } catch (_) { /* silencioso — muestra datos base si falla */ }
+}
+
+cargarOverrides();
 
 window.addEventListener("resize", programarAjusteTarjeta);
 window.addEventListener("orientationchange", programarAjusteTarjeta);
