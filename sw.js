@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farmacia-v13';
+const CACHE_NAME = 'farmacia-v14';
 
 // Activos estáticos: se sirven desde caché (cambian poco)
 const STATIC_ASSETS = [
